@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BedDouble, Mountain, Sparkles, Facebook, Instagram, Twitter, Menu, X, CalendarCheck, Users } from 'lucide-react';
 
-// Define the API URL for the backend
-// *** CRITICAL FIX: Changed to the correct backend server port (3001) and includes the /api prefix. ***
+
 const API_URL = 'http://localhost:5000/api'; 
 
-// --- Component Definitions ---
 
-// Header/Navigation Component (Minimal change to keep existing structure)
 function Header({ setView }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Common navigation links JSX
+
   const navLinks = (
     <>
       <button
@@ -39,19 +36,19 @@ function Header({ setView }) {
     <nav className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Company Name */}
+     
           <div className="shrink-0 flex items-center">
             <h1 className="text-2xl font-extrabold text-blue-700 tracking-wide">
               Mantra Resorts
             </h1>
           </div>
           
-          {/* Desktop Nav */}
+      
           <div className="hidden md:flex md:items-center md:space-x-6">
             {navLinks}
           </div>
           
-          {/* Mobile Menu Button */}
+ 
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -64,8 +61,7 @@ function Header({ setView }) {
           </div>
         </div>
       </div>
-      
-      {/* Mobile Menu Dropdown */}
+    
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-xl absolute w-full z-40">
           <div className="flex flex-col px-4 pt-2 pb-4 space-y-2">
@@ -77,9 +73,8 @@ function Header({ setView }) {
   );
 }
 
-// Hero Section Component (Unchanged)
 function HeroSection() {
-  // Fallback image for safety, but using the provided Unsplash link
+ 
   const imageUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1650&q=80";
 
   return (
@@ -102,7 +97,7 @@ function HeroSection() {
           Book Now
         </a>
       </div>
-      {/* Simple keyframe for subtle animation */}
+     
       <style>{`
         @keyframes fadeInDown {
           0% { opacity: 0; transform: translateY(-20px); }
@@ -119,7 +114,7 @@ function HeroSection() {
   );
 }
 
-// Services Section Component (Unchanged)
+
 function ServicesSection() {
   const services = [
     {
@@ -160,12 +155,12 @@ function ServicesSection() {
   );
 }
 
-// Gallery Section Component (Unchanged)
+
 function GallerySection() {
   const images = [
     { src: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80", alt: "Resort pool" },
     { src: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80", alt: "Resort room interior" },
-    { src: "https://images.unsplash.com/photo-1535827841776-24e39e51349b?auto=format&fit=crop&w=800&q=80", alt: "Beachside dining" },
+    // { src: "https://images.unsplash.com/photo-1535827841776-24e39e51349b?auto=format&fit=crop&w=800&q=80", alt: "Beachside dining" },
   ];
 
   return (
@@ -200,11 +195,11 @@ function BookingForm() {
     email: '',
     checkIn: '',
     checkOut: '',
-    guests: 1, // Changed to number for API consistency
+    guests: 1, 
   });
   const [statusMessage, setStatusMessage] = useState({ type: '', text: '' });
 
-  // Get today's date in YYYY-MM-DD format
+ 
   const getTodayDate = () => {
     return new Date().toISOString().split('T')[0];
   };
@@ -221,7 +216,7 @@ function BookingForm() {
     e.preventDefault();
     setStatusMessage({ type: 'loading', text: 'Submitting booking...' });
     
-    // Client-side date validation
+
     const checkInDate = new Date(formData.checkIn);
     const checkOutDate = new Date(formData.checkOut);
 
@@ -234,21 +229,21 @@ function BookingForm() {
       return;
     }
     
-    // *** FIX: Actual API call implementation to the backend ***
+    
     try {
       const response = await fetch(`${API_URL}/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Ensure guests is parsed as an integer for the backend schema
+  
         body: JSON.stringify({...formData, guests: parseInt(formData.guests, 10)}),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        // Handle server-side validation or errors (e.g., 400 Bad Request)
+    
         const errorMessage = result.message || (result.errors ? result.errors.join(', ') : 'Failed to submit booking. Check server console.');
         throw new Error(errorMessage);
       }
@@ -267,7 +262,7 @@ function BookingForm() {
       console.error('Booking error:', error);
       setStatusMessage({ type: 'error', text: error.message || 'An unexpected error occurred. Is the backend server running on port 3001?' });
     }
-    // *** END FIX ***
+
   };
 
   return (
@@ -371,7 +366,7 @@ function BookingForm() {
   );
 }
 
-// Reusable Booking Detail Component for AdminView (Added back for completeness)
+
 function BookingDetail({ Icon, label, value, isEmail = false }) {
     return (
         <div className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg">
@@ -386,13 +381,12 @@ function BookingDetail({ Icon, label, value, isEmail = false }) {
     );
 }
 
-// Admin View Component
+
 function AdminView() {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Helper function to format date
   const formatDate = (dateString) => {
     try {
       if (!dateString) return 'N/A';
@@ -406,7 +400,7 @@ function AdminView() {
     }
   };
   
-  // *** FIX: Actual API call implementation to fetch bookings ***
+
   const fetchBookings = async () => {
     setIsLoading(true);
     setError(null);
@@ -414,12 +408,12 @@ function AdminView() {
       const response = await fetch(`${API_URL}/bookings`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch bookings. Is the backend running on port 3001?');
+        throw new Error('Failed to fetch bookings. Is the backend running on port 5000?');
       }
       
       const data = await response.json();
-      // Assuming 'bookedAt' field exists on the documents for sorting
-      setBookings(data.sort((a, b) => new Date(b.bookedAt || 0) - new Date(a.bookedAt || 0))); 
+     
+      setBookings(data.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))); 
 
     } catch (err) {
       console.error("Fetch error:", err);
@@ -432,7 +426,7 @@ function AdminView() {
   useEffect(() => {
     fetchBookings();
   }, []);
-  // *** END FIX ***
+
 
   return (
     <div className="container mx-auto px-4 py-12 md:py-16 min-h-[60vh]">
@@ -483,7 +477,7 @@ function AdminView() {
             <div key={booking._id} className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition duration-300">
               <div className="flex flex-col md:flex-row justify-between md:items-start mb-4 border-b pb-3">
                 <h3 className="text-2xl font-bold text-blue-700">{booking.name}</h3>
-                <p className="text-gray-600 italic mt-1 md:mt-0 text-right">Booked On: {formatDate(booking.bookedAt)}</p>
+                <p className="text-gray-600 italic mt-1 md:mt-0 text-right">Booked On: {formatDate(booking.createdAt)}</p>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                 <BookingDetail Icon={CalendarCheck} label="Check-in Date" value={formatDate(booking.checkIn)} />
@@ -499,7 +493,7 @@ function AdminView() {
   );
 }
 
-// Footer Component (Unchanged)
+
 function Footer() {
   const socialLinks = [
     { icon: <Facebook size={20} />, href: "https://facebook.com", label: "Facebook" },
@@ -511,7 +505,7 @@ function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-10">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-          {/* Contact Info */}
+      
           <div className="mb-6 md:mb-0">
             <h4 className="text-xl font-bold text-white mb-2">Mantra Resorts</h4>
             <p className="text-sm">Email: info@mantraresorts.com</p>
@@ -519,7 +513,7 @@ function Footer() {
             <p className="text-sm">123 Paradise Way, Oceanfront, CA</p>
           </div>
           
-          {/* Social Media Links */}
+    
           <div className="flex justify-center space-x-6">
             {socialLinks.map((link, index) => (
               <a
@@ -544,18 +538,18 @@ function Footer() {
 }
 
 
-// --- Main App Component ---
+
 function App() {
-  // State to manage the current view ('home' or 'admin')
+
   const [view, setView] = useState('home');
 
   return (
-    // The font-sans class is set here to ensure the Inter font is used via Tailwind config
+ 
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800 antialiased flex flex-col">
       <Header setView={setView} />
       
       <div className="flex-grow">
-      {/* Conditional Rendering based on view state */}
+     
       {view === 'home' ? (
         <Home />
       ) : (
@@ -568,7 +562,7 @@ function App() {
   );
 }
 
-// Home View Component (Contains Hero, Services, Gallery, BookingForm)
+
 function Home() {
   return (
     <main>

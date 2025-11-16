@@ -29,7 +29,7 @@ const BookingSchema = new mongoose.Schema({
     type: Date,
     default: Date.now, // Automatically set to the current date and time
   },
-});
+}, { timestamps: true }); 
 
 const Booking = mongoose.model('Booking', BookingSchema);
 export default Booking;
