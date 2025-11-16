@@ -3,14 +3,14 @@ const BookingSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Name is required'],
-    trim: true, // Trims whitespace
+    trim: true, 
   },
   email: {
     type: String,
     required: [true, 'Email is required'],
     trim: true,
     lowercase: true,
-    match: [/.+\@.+\..+/, 'Please enter a valid email address'], // Basic email validation
+    match: [/.+\@.+\..+/, 'Please enter a valid email address'],
   },
   checkIn: {
     type: Date,
@@ -27,7 +27,7 @@ const BookingSchema = new mongoose.Schema({
   },
   bookingDate: {
     type: Date,
-    default: Date.now, // Automatically set to the current date and time
+    default: Date.now,
   },
 }, { timestamps: true }); 
 

@@ -23,7 +23,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 if (!MONGODB_URL) {
   console.error('Error: MONGODB_URL is not defined in your .env file.');
-  process.exit(1); // Exit the process with an error code
+  process.exit(1);
 }
 
 mongoose.connect(MONGODB_URL)
